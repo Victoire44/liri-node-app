@@ -1,11 +1,11 @@
 require("dotenv").config();
+
 var keys = require("./keys.js");
-const axios = require('axios');
+const axios = require("axios");
 var fs = require("fs");
 var Spotify = require('node-spotify-api');
 
 var command = process.argv[2]
-
 var nodeArgs = process.argv;
 var arg = "";
 
