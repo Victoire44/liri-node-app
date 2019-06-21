@@ -1,54 +1,65 @@
 require("dotenv").config();
-
-var keys = require("./keys.js");
+var keys = require("./keys");
 const axios = require("axios");
 var fs = require("fs");
-var Spotify = require('node-spotify-api');
+var Spotify = require("node-spotify-api");
+var colors = require("colors");
 
 var command = process.argv[2]
-var nodeArgs = process.argv;
-var arg = "";
+var arg = process.argv.slice(3).join(" ");
+console.log(arg)
 
-for (var i = 3; i < nodeArgs.length; i++) {
-    if (i > 3 && i < nodeArgs.length) {
-        arg += "+" + nodeArgs[i];
-    } else {
-        arg += nodeArgs[i];
-    }
+switch (command) {
+    case "concert-this":
+        concert();
+        break;
+
+    case "spotify-this-song":
+        spotify();
+        break;
+
+    case "movie-this":
+        omdbapi();
+        break;
+
+    case "movie-this":
+        doWhatItSays();
+        break;
+    default:
+       "unknown command " + command;
+       break;
 }
 
-if (command === "concert-this") {
-    concert();
-} else if (command === "spotify-this-song") {
-    spotify();
-} else if (command === "movie-this") {
-    omdbapi();
-} else if (command === "do-what-it-says") {
-    doWhatItSays();
-} else {
-    console.log("unknown command " + command)
-}
-
+// if (command === "concert-this") {
+//     concert();
+// } else if (command === "spotify-this-song") {
+//     spotify();
+// } else if (command === "movie-this") {
+//     omdbapi();
+// } else if (command === "do-what-it-says") {
+//     doWhatItSays();
+// } else {
+//     console.log("unknown command " + command)
+// }
 
 function concert() {
     axios.get("https://rest.bandsintown.com/artists/" + arg + "/events?app_id=codingbootcamp")
         .then(function (response) {
             var data = response.data[0]
-            console.log("\n" + data.venue.name);
-            console.log(data.venue.city + ",", data.venue.country)
-            console.log(data.datetime + "\n")
+            console.log("\n" + data.venue.name.yellow + "\n" + data.venue.city.yellow, data.venue.country.yellow + "\n" + data.datetime.yellow + "\n")
         })
+
 }
 
 function spotify() {
     var spotify = new Spotify(keys.spotify);
-    spotify.search({ type: 'track', query: 'All the Small Things' }, function (err, data) {
+    spotify.search({ type: 'track', query: arg }, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-        console.log("\n" + data.tracks.items[0].artists[0].name)
-        console.log(data.tracks.items[0].album.name)
-        console.log(data.tracks.items[0].album.external_urls.spotify + "\n")
+
+        var dataJSON = data.tracks.items[0];
+        console.log("\n" + dataJSON.artists[0].name.yellow + "\n" + dataJSON.name.yellow + "\n" + dataJSON.external_urls.spotify.yellow + "\n" + dataJSON.album.name.yellow + "\n")
     });
 }
 
@@ -57,17 +68,12 @@ function omdbapi() {
 
     axios.get(queryUrl).then(
         function (response) {
-            if(arg === ""){
-            console.log("Mr.Nobody")
-            }else{
-            console.log("\n" + "*",response.data.Title);
-            console.log("*",response.data.Year);
-            console.log("*",response.data.imdbRating);
-            console.log("*",response.data.Ratings[0].Value);
-            console.log("*",response.data.Country);
-            console.log("*",response.data.Language);
-            console.log("*",response.data.Plot);
-            console.log("*",response.data.Actors + "\n"); 
+            if (arg === "") {
+                console.log("Mr.Nobody")
+            } else {
+                console.log("\n" + "*", response.data.Title.rainbow.bold, "\n*", response.data.Year.yellow,
+                    "\n*", response.data.imdbRating.yellow, "\n*", response.data.Ratings[0].Value.yellow,
+                    "\n*", response.data.Country.yellow, "\n*", response.data.Plot.yellow, "\n*", response.data.Actors.yellow + "\n");
             }
         })
         .catch(function (error) {
@@ -87,8 +93,8 @@ function omdbapi() {
 function doWhatItSays() {
     fs.readFile("random.txt", "utf8", function (error, data) {
         if (error) {
-            return console.log(error);
-          }
+            console.log(error);
+        }
         console.log(data)
     });
 }
