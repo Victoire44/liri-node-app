@@ -7,36 +7,39 @@ var colors = require("colors");
 
 var command = process.argv[2]
 var arg = process.argv.slice(3).join(" ");
-console.log(arg)
 
-switch (command) {
-    case "concert-this":
-        concert();
-        break;
+liri();
 
-    case "spotify-this-song":
-        spotify();
-        break;
+function liri() {
+    switch (command) {
+        case "concert-this":
+            concert();
+            break;
 
-    case "movie-this":
-        omdbapi();
-        break;
+        case "spotify-this-song":
+            spotify();
+            break;
 
-    case "do-what-it-says":
-        doWhatItSays();
-        break;
-    default:
-        "unknown command " + command;
-        break;
+        case "movie-this":
+            omdbapi();
+            break;
+
+        case "do-what-it-says":
+            doWhatItSays();
+            break;
+        default:
+            "unknown command " + command;
+            break;
+    }
 }
 
 function concert() {
     axios.get("https://rest.bandsintown.com/artists/" + arg + "/events?app_id=codingbootcamp")
         .then(function (response) {
             var data = response.data[0]
-            console.log("-------------EVENT-------------")
-            console.log("\n*","Name of the venue:",data.venue.name.yellow + "\n*","Venue location:",data.venue.city.yellow, data.venue.country.yellow,"\n*","Date of the Event",data.datetime.yellow + "\n")
-            console.log("-------------------------------")
+            console.log("_____________CONCERT_____________")
+            console.log("\n*", "Name of the venue:", data.venue.name.yellow + "\n*", "Venue location:", data.venue.city.yellow, data.venue.country.yellow, "\n*", "Date of the Event", data.datetime.yellow + "\n")
+            console.log("_________________________________")
         })
 }
 
@@ -46,29 +49,24 @@ function spotify() {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-
         var jsonData = data.tracks.items[0];
-        console.log("-------------MUSIC-------------")
-        console.log("\n*","Artist:",jsonData.artists[0].name.yellow,"\n*","The song's name:",jsonData.name.yellow,"\n*","A preview link of the song from Spotify:",jsonData.external_urls.spotify.yellow,"\n*","The album the the song is from:",jsonData.album.name.yellow,"\n")
-        console.log("-------------------------------")
+        console.log("_____________MUSIC_____________")
+        console.log("\n*", "Artist:", jsonData.artists[0].name.yellow, "\n*", "The song's name:", jsonData.name.yellow, "\n*", "A preview link of the song from Spotify:", jsonData.external_urls.spotify.yellow, "\n*", "The album the the song is from:", jsonData.album.name.yellow, "\n")
+        console.log("_______________________________")
     });
 }
 
 function omdbapi() {
-    var queryUrl = "http://www.omdbapi.com/?t=" + arg + "&y=&plot=short&apikey=trilogy";
+    var queryUrl = "http://www.omdbapi.com/?t=" + (arg === "" ? "Mr. Nobody" : arg) + "&y=&plot=short&apikey=trilogy";
 
     axios.get(queryUrl).then(
         function (response) {
-            if (arg === "") {
-                console.log("Mr.Nobody")
-            } else {
-                var jsonData = response.data
-                console.log("-------------MOVIE-------------")
-                console.log("\n*","Title:",jsonData.Title.rainbow.bold, "\n*", "Year the movie came out :",jsonData.Year.yellow,
-                    "\n*","IMDB Rating:",jsonData.imdbRating.yellow,"\n*","Rotten Tomatoes Rating:",jsonData.Ratings[0].Value.yellow,
-                    "\n*", "Country where the movie was produced:",jsonData.Country.yellow,"\n*","Language(s):",jsonData.Language.yellow,"\n*","Plot:",jsonData.Plot.yellow,"\n*","Actors",jsonData.Actors.yellow,"\n");
-                console.log("-------------------------------")
-            }
+            var jsonData = response.data
+            console.log("_____________MOVIE_____________")
+            console.log("\n*", "Title:", jsonData.Title.rainbow.bold, "\n*", "Year the movie came out :", jsonData.Year.yellow,
+                "\n*", "IMDB Rating:", jsonData.imdbRating.yellow, "\n*", "Rotten Tomatoes Rating:", jsonData.Ratings[0].Value.yellow,
+                "\n*", "Country where the movie was produced:", jsonData.Country.yellow, "\n*", "Language(s):", jsonData.Language.yellow, "\n*", "Plot:", jsonData.Plot.yellow, "\n*", "Actors", jsonData.Actors.yellow, "\n");
+            console.log("_______________________________")
         })
         .catch(function (error) {
             if (error.response) {
@@ -88,7 +86,13 @@ function doWhatItSays() {
     fs.readFile("random.txt", "utf8", function (error, data) {
         if (error) {
             console.log(error);
+        } else {
+            var fileArgs = data.split(",");
+            command = fileArgs[0];
+            arg = fileArgs[1];
+            liri();
         }
-        console.log("\n--------------------------------------\n" + data.yellow + "\n--------------------------------------\n")
     });
 }
+
+
