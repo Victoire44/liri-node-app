@@ -22,33 +22,22 @@ switch (command) {
         omdbapi();
         break;
 
-    case "movie-this":
+    case "do-what-it-says":
         doWhatItSays();
         break;
     default:
-       "unknown command " + command;
-       break;
+        "unknown command " + command;
+        break;
 }
-
-// if (command === "concert-this") {
-//     concert();
-// } else if (command === "spotify-this-song") {
-//     spotify();
-// } else if (command === "movie-this") {
-//     omdbapi();
-// } else if (command === "do-what-it-says") {
-//     doWhatItSays();
-// } else {
-//     console.log("unknown command " + command)
-// }
 
 function concert() {
     axios.get("https://rest.bandsintown.com/artists/" + arg + "/events?app_id=codingbootcamp")
         .then(function (response) {
             var data = response.data[0]
-            console.log("\n" + data.venue.name.yellow + "\n" + data.venue.city.yellow, data.venue.country.yellow + "\n" + data.datetime.yellow + "\n")
+            console.log("-------------EVENT-------------")
+            console.log("\n*","Name of the venue:",data.venue.name.yellow + "\n*","Venue location:",data.venue.city.yellow, data.venue.country.yellow,"\n*","Date of the Event",data.datetime.yellow + "\n")
+            console.log("-------------------------------")
         })
-
 }
 
 function spotify() {
@@ -58,8 +47,10 @@ function spotify() {
             return console.log('Error occurred: ' + err);
         }
 
-        var dataJSON = data.tracks.items[0];
-        console.log("\n" + dataJSON.artists[0].name.yellow + "\n" + dataJSON.name.yellow + "\n" + dataJSON.external_urls.spotify.yellow + "\n" + dataJSON.album.name.yellow + "\n")
+        var jsonData = data.tracks.items[0];
+        console.log("-------------MUSIC-------------")
+        console.log("\n*","Artist:",jsonData.artists[0].name.yellow,"\n*","The song's name:",jsonData.name.yellow,"\n*","A preview link of the song from Spotify:",jsonData.external_urls.spotify.yellow,"\n*","The album the the song is from:",jsonData.album.name.yellow,"\n")
+        console.log("-------------------------------")
     });
 }
 
@@ -71,9 +62,12 @@ function omdbapi() {
             if (arg === "") {
                 console.log("Mr.Nobody")
             } else {
-                console.log("\n" + "*", response.data.Title.rainbow.bold, "\n*", response.data.Year.yellow,
-                    "\n*", response.data.imdbRating.yellow, "\n*", response.data.Ratings[0].Value.yellow,
-                    "\n*", response.data.Country.yellow, "\n*", response.data.Plot.yellow, "\n*", response.data.Actors.yellow + "\n");
+                var jsonData = response.data
+                console.log("-------------MOVIE-------------")
+                console.log("\n*","Title:",jsonData.Title.rainbow.bold, "\n*", "Year the movie came out :",jsonData.Year.yellow,
+                    "\n*","IMDB Rating:",jsonData.imdbRating.yellow,"\n*","Rotten Tomatoes Rating:",jsonData.Ratings[0].Value.yellow,
+                    "\n*", "Country where the movie was produced:",jsonData.Country.yellow,"\n*","Language(s):",jsonData.Language.yellow,"\n*","Plot:",jsonData.Plot.yellow,"\n*","Actors",jsonData.Actors.yellow,"\n");
+                console.log("-------------------------------")
             }
         })
         .catch(function (error) {
@@ -95,6 +89,6 @@ function doWhatItSays() {
         if (error) {
             console.log(error);
         }
-        console.log(data)
+        console.log("\n--------------------------------------\n" + data.yellow + "\n--------------------------------------\n")
     });
 }

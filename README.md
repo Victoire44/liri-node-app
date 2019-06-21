@@ -17,9 +17,7 @@ function concert() {
     axios.get("https://rest.bandsintown.com/artists/" + arg + "/events?app_id=codingbootcamp")
         .then(function (response) {
             var data = response.data[0]
-            console.log("\n" + data.venue.name);
-            console.log(data.venue.city + ",", data.venue.country)
-            console.log(data.datetime + "\n")
+            console.log("\n" + data.venue.name.yellow + "\n" + data.venue.city.yellow, data.venue.country.yellow + "\n" + data.datetime.yellow + "\n")
         })
 }
 ```
@@ -28,13 +26,12 @@ function concert() {
 ```javascript
 function spotify() {
     var spotify = new Spotify(keys.spotify);
-    spotify.search({ type: 'track', query: 'All the Small Things' }, function (err, data) {
+    spotify.search({ type: 'track', query: arg }, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-        console.log("\n" + data.tracks.items[0].artists[0].name)
-        console.log(data.tracks.items[0].album.name)
-        console.log(data.tracks.items[0].album.external_urls.spotify + "\n")
+        var dataJSON = data.tracks.items[0];
+        console.log("\n" + dataJSON.artists[0].name.yellow + "\n" + dataJSON.name.yellow + "\n" + dataJSON.external_urls.spotify.yellow + "\n" + dataJSON.album.name.yellow + "\n")
     });
 }
 ```
