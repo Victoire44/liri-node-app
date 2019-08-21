@@ -34,16 +34,27 @@ function liri() {
 }
 
 function concert() {
-    axios.get("https://rest.bandsintown.com/artists/" + arg + "/events?app_id=codingbootcamp")
-        .then(function (response) {
-            var data = response.data[0]
-            console.log("_____________CONCERT_____________")
-            console.log("\n*", "Name of the venue:", data.venue.name.yellow + "\n*", "Venue location:", data.venue.city.yellow, data.venue.country.yellow, "\n*", "Date of the Event", data.datetime.yellow + "\n")
-            console.log("_________________________________")
-        })
+    if (arg === "") {
+        console.log("Which artist do you want?")
+    } else {
+        axios.get("https://rest.bandsintown.com/artists/" + arg + "/events?app_id=codingbootcamp")
+            .then(function (response) {
+                if (response.data.length === 0) {
+                    console.log("No results found for " + arg)
+                } else {
+                    var data = response.data[0]
+                    console.log("_____________CONCERT_____________")
+                    console.log("\n*", "Name of the venue:", data.venue.name.yellow + "\n*", "Venue location:", data.venue.city.yellow, data.venue.country.yellow, "\n*", "Date of the Event", data.datetime.yellow + "\n")
+                    console.log("_________________________________")
+                }
+            })
+    }
 }
 
 function spotify() {
+    if (arg === "") {
+        console.log("Which music do you want?")
+    } else {
     var spotify = new Spotify(keys.spotify);
     spotify.search({ type: 'track', query: arg }, function (err, data) {
         if (err) {
@@ -54,6 +65,7 @@ function spotify() {
         console.log("\n*", "Artist:", jsonData.artists[0].name.yellow, "\n*", "The song's name:", jsonData.name.yellow, "\n*", "A preview link of the song from Spotify:", jsonData.external_urls.spotify.yellow, "\n*", "The album the the song is from:", jsonData.album.name.yellow, "\n")
         console.log("_______________________________")
     });
+}
 }
 
 function omdbapi() {

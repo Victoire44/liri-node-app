@@ -4,12 +4,12 @@
 
 ## Used Technologies
 
-- JavaScript
-- Node.js
+- [JavaScript](https://www.javascript.com/)
+- [Node.js](https://nodejs.org)
 
 ## Node Package Manager (npm)
 
-Using the axios package to retrieve data from API:
+Using the axios package to retrieve data from APIs:
 
 - <strong>Bands in Town API</strong> to render the name of the venue, the venue location and the date for each event.
 
@@ -44,7 +44,6 @@ function spotify() {
         console.log("_______________________________")
     });
 }
-
 ```
 
 - <strong>OMBD API</strong> to render the title of the movie, the year the movie came out, the IMDB rating, the rotten tomatoes rating,the country where the movie was produced, the language, the plot and the actors in the movie.
@@ -71,7 +70,7 @@ Use the fs Node package to retrieve the text inside of random.txt and then use i
 ![Do what it says](assets/do-what-it-says.gif)
 
 ```javascript
-unction doWhatItSays() {
+function doWhatItSays() {
     fs.readFile("random.txt", "utf8", function (error, data) {
         if (error) {
             console.log(error);
@@ -86,4 +85,4 @@ unction doWhatItSays() {
 
 ## Author
 
-Victoire Baron
+Victoire Baron 
